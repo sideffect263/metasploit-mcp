@@ -1,0 +1,41 @@
+[Unit]
+Description=Metasploit MCP Server
+Documentation=https://github.com/your-repo/metasploit-mcp
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/metasploit-mcp
+ExecStart=/usr/bin/python3 /opt/metasploit-mcp/metasploit_mcp_server.py
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+KillMode=process
+
+# Environment variables
+Environment=MSF_PASSWORD=msf123!@#
+Environment=MSF_SERVER=127.0.0.1
+Environment=MSF_PORT=55553
+Environment=MSF_SSL=false
+Environment=PYTHONPATH=/opt/metasploit-mcp
+Environment=PYTHONUNBUFFERED=1
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/metasploit-mcp
+ReadWritePaths=/tmp
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=metasploit-mcp
+
+[Install]
+WantedBy=multi-user.target 

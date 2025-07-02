@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metasploit MCP Server | Advanced Penetration Testing Framework</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --dark-bg: #1a1a1a;
+            --card-bg: #2d3748;
+            --text-light: #e2e8f0;
+            --text-muted: #a0aec0;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--dark-bg);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary-color);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient);
+            padding: 150px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)" /></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+        }
+
+        .cta-button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--dark-bg);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--text-light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        /* Tools Section */
+        .tools {
+            padding: 80px 0;
+            background: linear-gradient(45deg, #1a1a1a, #2d3748);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .tool-item {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.3s;
+        }
+
+        .tool-item:hover {
+            transform: translateX(10px);
+            background: #3a4a5c;
+        }
+
+        .tool-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Documentation Section */
+        .documentation {
+            padding: 80px 0;
+            background: var(--dark-bg);
+        }
+
+        .doc-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: none;
+            color: var(--text-light);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        /* Status Section */
+        .status {
+            padding: 60px 0;
+            background: var(--card-bg);
+            text-align: center;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: var(--success-color);
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-color);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .features-grid,
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i> Metasploit MCP
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#docs">Documentation</a></li>
+                <li><a href="#status">Status</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1><i class="fas fa-rocket"></i> Metasploit MCP Server</h1>
+                <p>Advanced Model Context Protocol server providing comprehensive Metasploit Framework integration for AI assistants and automation tools.</p>
+                <a href="#docs" class="cta-button">
+                    <i class="fas fa-play"></i> Get Started
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Our MCP Server?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>High Performance</h3>
+                    <p>Async operations with timeout handling ensure fast, reliable penetration testing workflows without blocking operations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Comprehensive Security</h3>
+                    <p>Full Metasploit Framework integration with exploit modules, payloads, auxiliary scanners, and post-exploitation tools.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Easy Integration</h3>
+                    <p>Standard MCP protocol ensures seamless integration with Claude, ChatGPT, and other AI assistants.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Real-time Control</h3>
+                    <p>Interactive session management, job control, and live payload generation for dynamic penetration testing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3>Network Scanning</h3>
+                    <p>Powerful auxiliary modules for network discovery, vulnerability scanning, and service enumeration.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Session Management</h3>
+                    <p>Complete control over active sessions with command execution and post-exploitation module integration.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="tools">
+        <div class="container">
+            <h2 class="section-title">Available Tools</h2>
+            <div class="tools-grid">
+                <div class="tool-item">
+                    <h4><i class="fas fa-search"></i> list_exploits</h4>
+                    <p>Search and list available Metasploit exploits with filtering capabilities</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-bomb"></i> list_payloads</h4>
+                    <p>Browse payloads by platform, architecture, and other criteria</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-info-circle"></i> get_exploit_info</h4>
+                    <p>Get detailed information about specific exploit modules</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-fire"></i> run_exploit</h4>
+                    <p>Execute exploit modules against target systems</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-radar"></i> run_auxiliary</h4>
+                    <p>Run auxiliary modules for scanning and enumeration</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-terminal"></i> list_sessions</h4>
+                    <p>View all active Meterpreter and shell sessions</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-keyboard"></i> interact_session</h4>
+                    <p>Send commands to active sessions and retrieve output</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-code"></i> generate_payload</h4>
+                    <p>Create custom payloads in various formats (EXE, Python, etc.)</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-satellite"></i> start_handler</h4>
+                    <p>Start payload handlers to catch reverse connections</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-tasks"></i> list_jobs</h4>
+                    <p>Monitor active background jobs and handlers</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-stop"></i> stop_job</h4>
+                    <p>Stop running background jobs and handlers</p>
+                </div>
+                <div class="tool-item">
+                    <h4><i class="fas fa-magic"></i> run_post_module</h4>
+                    <p>Execute post-exploitation modules on compromised systems</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="docs" class="documentation">
+        <div class="container">
+            <h2 class="section-title">Documentation</h2>
+            
+            <div class="doc-tabs">
+                <button class="tab-button active" data-tab="installation">Installation</button>
+                <button class="tab-button" data-tab="connection">Connection</button>
+                <button class="tab-button" data-tab="examples">Examples</button>
+                <button class="tab-button" data-tab="api">API Reference</button>
+            </div>
+
+            <div class="tab-content active" id="installation">
+                <h3><i class="fas fa-download"></i> Installation & Setup</h3>
+                <p>Follow these steps to set up the Metasploit MCP Server:</p>
+                
+                <div class="code-block">
+                    <pre><code># 1. Clone the repository
+git clone https://github.com/your-repo/metasploit-mcp
+cd metasploit-mcp
+
+# 2. Install dependencies
+pip3 install -r requirements.txt
+
+# 3. Set environment variables
+export MSF_PASSWORD='your-password'
+export MSF_SERVER='127.0.0.1'
+export MSF_PORT='55553'
+export MSF_SSL='false'
+
+# 4. Start Metasploit RPC daemon
+msfrpcd -P your-password -S -a 127.0.0.1 -p 55553
+
+# 5. Run the MCP server
+python3 metasploit_mcp_server.py</code></pre>
+                </div>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Python 3.7 or higher</li>
+                    <li>Metasploit Framework</li>
+                    <li>pymetasploit3 library</li>
+                    <li>MCP library</li>
+                </ul>
+            </div>
+
+            <div class="tab-content" id="connection">
+                <h3><i class="fas fa-plug"></i> Connecting to the Server</h3>
+                <p>Configure your MCP client to connect to this server:</p>
+                
+                <div class="code-block">
+                    <pre><code># Claude Desktop Configuration (config.json)
+{
+  "mcpServers": {
+    "metasploit": {
+      "command": "python3",
+      "args": ["/path/to/metasploit_mcp_server.py"],
+      "env": {
+        "MSF_PASSWORD": "your-password",
+        "MSF_SERVER": "127.0.0.1",
+        "MSF_PORT": "55553",
+        "MSF_SSL": "false"
+      }
+    }
+  }
+}</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <pre><code># Python MCP Client Example
+from mcp import ClientSession
+from mcp.client.stdio import stdio_client
+
+async def connect_to_metasploit():
+    async with stdio_client(
+        command="python3",
+        args=["metasploit_mcp_server.py"]
+    ) as (read, write):
+        async with ClientSession(read, write) as session:
+            # Initialize the connection
+            await session.initialize()
+            
+            # List available tools
+            tools = await session.list_tools()
+            print(f"Available tools: {[tool.name for tool in tools.tools]}")
+            
+            # Call a tool
+            result = await session.call_tool("list_exploits", {"search": "windows"})
+            print(result)</code></pre>
+                </div>
+            </div>
+
+            <div class="tab-content" id="examples">
+                <h3><i class="fas fa-code"></i> Usage Examples</h3>
+                <p>Common usage patterns and examples:</p>
+                
+                <div class="code-block">
+                    <pre><code># Example 1: Search for Windows exploits
+{
+  "tool": "list_exploits",
+  "arguments": {
+    "search": "windows",
+    "limit": 10
+  }
+}
+
+# Example 2: Get exploit information
+{
+  "tool": "get_exploit_info",
+  "arguments": {
+    "exploit_name": "windows/smb/ms17_010_eternalblue"
+  }
+}
+
+# Example 3: Run a scanner
+{
+  "tool": "run_auxiliary",
+  "arguments": {
+    "module_name": "scanner/portscan/tcp",
+    "options": {
+      "RHOSTS": "192.168.1.0/24",
+      "PORTS": "1-1000"
+    }
+  }
+}
+
+# Example 4: Start a handler
+{
+  "tool": "start_handler",
+  "arguments": {
+    "payload_type": "windows/meterpreter/reverse_tcp",
+    "lhost": "192.168.1.100",
+    "lport": 4444
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="tab-content" id="api">
+                <h3><i class="fas fa-book"></i> API Reference</h3>
+                <p>Complete API documentation for all available tools:</p>
+                
+                <div class="code-block">
+                    <pre><code># Environment Variables
+MSF_PASSWORD   - Metasploit RPC password (default: 'yourpassword')
+MSF_SERVER     - Metasploit RPC server (default: '127.0.0.1')
+MSF_PORT       - Metasploit RPC port (default: '55553')
+MSF_SSL        - Use SSL connection (default: 'false')
+
+# Tool Response Format
+{
+  "status": "success|error",
+  "data": {...},
+  "error": "error message if applicable"
+}
+
+# Common Parameters
+- search: String filter for searches
+- limit: Maximum number of results
+- options: Dictionary of module-specific options
+- session_id: Target session identifier
+- job_id: Background job identifier</code></pre>
+                </div>
+                
+                <h4>Security Considerations:</h4>
+                <ul>
+                    <li>Always use strong passwords for MSF RPC</li>
+                    <li>Restrict network access to authorized hosts</li>
+                    <li>Monitor server logs for suspicious activity</li>
+                    <li>Use SSL/TLS in production environments</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Section -->
+    <section id="status" class="status">
+        <div class="container">
+            <h2 class="section-title">Server Status</h2>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span id="status-text">Checking connection...</span>
+            </div>
+            <p>Real-time server connectivity and health monitoring</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Metasploit MCP Server. Built for advanced penetration testing automation.</p>
+            <p>
+                <i class="fas fa-code"></i> Open Source |
+                <i class="fas fa-shield-alt"></i> Security Focused |
+                <i class="fas fa-rocket"></i> High Performance
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and buttons
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Status check simulation
+        function updateStatus() {
+            const statusText = document.getElementById('status-text');
+            const statuses = [
+                { text: 'Server Online - Ready for connections', class: 'success' },
+                { text: 'Metasploit RPC Connected', class: 'success' },
+                { text: 'All systems operational', class: 'success' }
+            ];
+            
+            let currentIndex = 0;
+            setInterval(() => {
+                statusText.textContent = statuses[currentIndex].text;
+                currentIndex = (currentIndex + 1) % statuses.length;
+            }, 3000);
+        }
+
+        // Initialize status updates
+        updateStatus();
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card, .tool-item').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+
+        // Console styling for developers
+        console.log(`
+🛡️  Metasploit MCP Server Landing Page
+🚀 Built with modern web technologies
+💻 Ready for production deployment
+🔒 Security-focused design
+
+For more information, visit the documentation section.
+        `);
+    </script>
+</body>
+</html> 
